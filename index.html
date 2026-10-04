@@ -1,571 +1,556 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nikita Sergienko | UE5 Developer</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <style>
-        :root {
-            --cyan: #00ffcc;
-            --pink: #ff00aa;
-            --purple: #8b5cf6;
-            --bg-deep: #03050f;
-            --glass-bg: rgba(10, 15, 30, 0.55);
-            --glass-border: rgba(0, 255, 204, 0.18);
-        }
-        * { box-sizing: border-box; }
-        body {
-            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-deep);
-            color: #e0e0e0;
-            cursor: default;
-            overflow-x: hidden;
-            scroll-behavior: smooth;
-            -webkit-font-smoothing: antialiased;
-        }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #03050f; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #00ffcc40, #ff00aa40, #00ffcc40);
-            border-radius: 10px; border: 1px solid #ffffff10;
-            backdrop-filter: blur(4px);
-        }
-        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #00ffcc80, #ff00aa80, #00ffcc80); }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Никита Сергиенко · Unreal Engine 5 Developer</title>
+<meta name="description" content="Геймплейный программист на Unreal Engine 5: C++, Blueprint, Gameplay Ability System, мультиплеер. Видео механик и проекты.">
+<meta property="og:title" content="Никита Сергиенко · Unreal Engine 5 Developer">
+<meta property="og:description" content="C++ · Blueprint · Multiplayer. Видео механик, проекты, резюме.">
+<meta property="og:image" content="assets/img/p1.webp">
+<meta name="theme-color" content="#FFFDF9">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='10' fill='%239D4616'/><text x='32' y='44' text-anchor='middle' font-family='Georgia,serif' font-size='34' font-weight='700' fill='%23FFFDF9'>NS</text></svg>">
+<link rel="stylesheet" href="assets/fonts.css">
+<style>
+:root{
+  --bg:#FFFDF9; --card:#FFFFFF; --cream:#FEF9F4; --chip:#F6EBDF;
+  --ink:#29231E; --ink2:#4A423C; --mut:#736F6C; --mut2:#9A9592;
+  --line:#E9E5E1; --line2:#DAD4CE;
+  --acc:#9D4616; --acc2:#7F3810;
+  --serif:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --sans:'IBM Plex Sans',-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  --mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+img,video{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:rgba(157,70,22,.18)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+@media(max-width:600px){.wrap{padding:0 16px}}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
 
-        /* Анимированная кибер-сетка */
-        .cyber-grid {
-            position: fixed; inset: 0; z-index: 0; pointer-events: none;
-            perspective: 900px; overflow: hidden;
-        }
-        .cyber-grid::before {
-            content: ''; position: absolute; inset: -50%;
-            background-image: linear-gradient(rgba(0,255,204,0.06) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0,255,204,0.06) 1px, transparent 1px);
-            background-size: 55px 55px;
-            animation: gridShift 20s linear infinite;
-            transform: rotateX(60deg) scale(2.2);
-            transform-origin: center top;
-            mask-image: radial-gradient(ellipse 70% 60% at 50% 35%, black 20%, transparent 70%);
-        }
-        .cyber-grid::after {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(ellipse at 50% 30%, #00ffcc08 0%, transparent 55%),
-                        radial-gradient(ellipse at 80% 70%, #ff00aa06 0%, transparent 55%),
-                        radial-gradient(ellipse at 20% 60%, #8b5cf608 0%, transparent 50%);
-            animation: pulseGlow 8s ease-in-out infinite;
-        }
-        @keyframes gridShift {
-            0% { transform: rotateX(60deg) scale(2.2) translateY(0); }
-            100% { transform: rotateX(60deg) scale(2.2) translateY(55px); }
-        }
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
+/* ─── верхняя панель ─── */
+.top{position:sticky;top:0;z-index:40;background:rgba(255,253,249,.88);backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:20px;height:60px}
+.mark{font-family:var(--serif);font-weight:600;font-size:18px;text-decoration:none;white-space:nowrap}
+.mark span{color:var(--acc)}
+.nav{display:flex;gap:22px;margin-left:auto}
+.nav a{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);text-decoration:none;transition:color .15s}
+.nav a:hover{color:var(--ink)}
+.lang{display:flex;border:1px solid var(--line2);border-radius:999px;padding:2px}
+.lang button{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;padding:4px 10px;border-radius:999px;color:var(--mut)}
+.lang button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
+.cv-top{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;
+  border:1px solid var(--acc);color:var(--acc);padding:6px 12px;border-radius:999px;white-space:nowrap;transition:.15s}
+.cv-top:hover{background:var(--acc);color:#fff}
+@media(max-width:860px){.nav{display:none}.lang{margin-left:auto}}
+@media(max-width:420px){.cv-top{display:none}}
 
-        /* Плавающие частицы */
-        .particles-container { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-        .particle {
-            position: absolute; border-radius: 50%;
-            animation: floatUp linear infinite;
-            opacity: 0; filter: blur(1px);
-        }
-        @keyframes floatUp {
-            0% { transform: translateY(105vh) scale(0); opacity: 0; }
-            10% { opacity: 0.8; }
-            90% { opacity: 0.1; }
-            100% { transform: translateY(-10vh) scale(1.3); opacity: 0; }
-        }
+/* ─── герой ─── */
+.hero{padding:64px 0 36px}
+.hero-grid{display:grid;grid-template-columns:1fr 236px;gap:48px;align-items:center}
+@media(max-width:760px){.hero-grid{grid-template-columns:1fr}.hero-photo{order:-1;width:132px}}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--acc)}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(40px,7vw,68px);line-height:1.02;letter-spacing:-.015em;margin:14px 0 18px}
+.lead{font-family:var(--serif);font-size:clamp(18px,2.2vw,21px);line-height:1.5;color:var(--ink2);max-width:620px}
+.meta-line{font-family:var(--mono);font-size:12.5px;color:var(--mut);margin-top:16px;letter-spacing:.04em}
+.meta-line i{font-style:normal;color:var(--line2);margin:0 8px}
+.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:26px}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;
+  text-decoration:none;padding:12px 18px;border-radius:999px;border:1px solid var(--ink);transition:.15s;font-weight:500}
+.btn.pri{background:var(--ink);color:var(--bg)}
+.btn.pri:hover{background:var(--acc);border-color:var(--acc)}
+.btn:not(.pri):hover{background:var(--ink);color:var(--bg)}
+.btn svg{width:15px;height:15px}
+.hero-photo{width:236px;aspect-ratio:1;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:var(--cream)}
+.hero-photo img{width:100%;height:100%;object-fit:cover}
 
-        .content-layer { position: relative; z-index: 1; }
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);background:var(--cream);border:1px solid var(--line);border-radius:6px;margin-top:44px}
+.tile{padding:18px 20px}
+.tile+.tile{border-left:1px solid var(--line)}
+.tile b{display:block;font-family:var(--serif);font-weight:600;font-size:30px;color:var(--acc);line-height:1.05}
+.tile span{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin-top:6px;line-height:1.5}
+@media(max-width:760px){.tiles{grid-template-columns:1fr 1fr}.tile:nth-child(3){border-left:0}.tile:nth-child(n+3){border-top:1px solid var(--line)}}
 
-        /* Неоновые эффекты */
-        .neon-cyan {
-            text-shadow: 0 0 8px #00ffcc66, 0 0 25px #00ffcc44, 0 0 55px #00ffcc22;
-            color: #00ffcc;
-            animation: neonPulse 3s ease-in-out infinite;
-        }
-        .neon-pink {
-            text-shadow: 0 0 8px #ff00aa66, 0 0 25px #ff00aa44, 0 0 55px #ff00aa22;
-            color: #ff00aa;
-            animation: neonPulse 3s ease-in-out 1s infinite;
-        }
-        @keyframes neonPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
-        }
-        .neon-white { text-shadow: 0 0 8px #ffffff33, 0 0 20px #ffffff18; }
+/* ─── секции ─── */
+section{padding:56px 0}
+.sec-h{display:flex;align-items:center;gap:16px;font-family:var(--mono);font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--acc);margin-bottom:10px}
+.sec-h::after{content:'';flex:1;height:1px;background:var(--line)}
+.sec-sub{color:var(--mut);max-width:680px;margin-bottom:34px}
 
-        /* Стеклянные панели */
-        .glass-future {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px) saturate(160%);
-            -webkit-backdrop-filter: blur(20px) saturate(160%);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
-            transition: all 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
-        }
-        .glass-future:hover {
-            border-color: rgba(0,255,204,0.4);
-            box-shadow: 0 12px 50px rgba(0,255,200,0.15), 0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
-        }
+/* ─── проекты ─── */
+.proj{padding:40px 0;border-top:1px solid var(--line)}
+.proj:first-of-type{border-top:0;padding-top:8px}
+.p-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.p-kick{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.p-title{font-family:var(--serif);font-weight:600;font-size:clamp(30px,4.4vw,42px);line-height:1.08;letter-spacing:-.01em;margin-top:6px}
+.status{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;background:var(--chip);color:var(--acc);
+  padding:6px 12px;border-radius:999px;white-space:nowrap}
+.status.live{background:#E8F2EC;color:#2D6A4A}
+.media{border-radius:6px;overflow:hidden;background:#15110E;border:1px solid var(--line)}
+.player{position:relative;aspect-ratio:16/9;background:#15110E}
+.player video{width:100%;height:100%;object-fit:contain;background:#15110E}
+.soon{position:absolute;left:14px;top:14px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  background:rgba(21,17,14,.78);color:#F3E7DA;padding:6px 10px;border-radius:999px;backdrop-filter:blur(4px)}
+.gal{display:grid;grid-template-columns:2fr 1fr;gap:4px;background:#15110E}
+.gal button{position:relative;display:block;overflow:hidden;background:#15110E;min-height:0}
+.gal button img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.gal button:hover img{transform:scale(1.035)}
+.gal .big{grid-row:span 3}
+.gal .sm{aspect-ratio:16/9}
+@media(max-width:680px){.gal{grid-template-columns:1fr 1fr 1fr}.gal .big{grid-column:1/-1;grid-row:auto;aspect-ratio:16/9}}
+.thumbs{display:grid;grid-template-columns:repeat(var(--n,4),1fr);gap:6px;margin-top:6px}
+.thumbs button{aspect-ratio:16/9.6;overflow:hidden;border-radius:4px;border:1px solid var(--line);background:#15110E}
+.thumbs img{width:100%;height:100%;object-fit:cover;opacity:.92;transition:opacity .15s}
+.thumbs button:hover img{opacity:1}
+.p-body{display:grid;grid-template-columns:1fr 1.15fr;gap:40px;margin-top:24px}
+@media(max-width:820px){.p-body{grid-template-columns:1fr;gap:18px}}
+.p-desc{font-family:var(--serif);font-size:18px;line-height:1.6;color:var(--ink2)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.tag{font-family:var(--mono);font-size:11.5px;padding:4px 9px;border:1px solid var(--line2);border-radius:4px;color:var(--ink2);background:var(--card)}
+.points{list-style:none}
+.points li{position:relative;padding-left:18px;color:var(--ink2);font-size:15.5px}
+.points li+li{margin-top:9px}
+.points li::before{content:'';position:absolute;left:2px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--acc)}
+.points b{color:var(--ink);font-weight:600}
 
-        /* Глитч-эффект */
-        .glitch-hover { position: relative; display: inline-block; }
-        .glitch-hover::before, .glitch-hover::after {
-            content: attr(data-text); position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%; opacity: 0; transition: opacity 0.3s;
-        }
-        .glitch-hover::before { color: #00ffcc; z-index: -1; animation: glitchShift 0.4s infinite reverse; }
-        .glitch-hover::after { color: #ff00aa; z-index: -2; animation: glitchShift 0.5s infinite; }
-        .glitch-hover:hover::before, .glitch-hover:hover::after { opacity: 0.7; }
-        @keyframes glitchShift {
-            0%, 100% { transform: translate(0); }
-            20% { transform: translate(-3px, 2px); }
-            40% { transform: translate(3px, -1px); }
-            60% { transform: translate(-1px, -2px); }
-            80% { transform: translate(2px, 1px); }
-        }
+/* клипы механик */
+.clips-h{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut);margin:34px 0 14px}
+.clips{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:1000px){.clips{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.clips{grid-template-columns:1fr}}
+.clip{background:var(--card);border:1px solid var(--line);border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
+.clip .v{position:relative;aspect-ratio:16/9;background:#15110E;cursor:pointer}
+.clip video{width:100%;height:100%;object-fit:cover}
+.clip .t{padding:12px 14px 14px;display:flex;flex-direction:column;flex:1}
+.clip .t .seek{margin-top:auto;align-self:flex-start}
+.clip .t p{margin-bottom:12px}
+.clip b{display:block;font-family:var(--serif);font-weight:600;font-size:17px;line-height:1.3}
+.clip p{font-size:13.5px;color:var(--mut);margin-top:4px;line-height:1.5}
+.seek{margin-top:10px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;color:var(--acc);border:1px solid rgba(157,70,22,.35);
+  border-radius:999px;padding:4px 10px;transition:.15s}
+.seek:hover{background:var(--acc);color:#fff;border-color:var(--acc)}
+.clip .ts{position:absolute;right:8px;bottom:8px;font-family:var(--mono);font-size:10.5px;background:rgba(21,17,14,.72);color:#F3E7DA;padding:3px 7px;border-radius:4px}
 
-        /* Карточки проектов */
-        .project-card {
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            position: relative; overflow: hidden;
-        }
-        .project-card:hover {
-            transform: translateY(-20px) scale(1.04);
-            box-shadow: 0 0 60px rgba(0,255,200,0.35);
-            border-color: rgba(0,255,204,0.6);
-        }
-        .project-card .card-img-wrapper { overflow: hidden; position: relative; }
-        .project-card .card-img-wrapper img {
-            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-        .project-card:hover .card-img-wrapper img { transform: scale(1.12); }
+/* карточка без медиа */
+.textcard{background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:26px 28px}
 
-        /* Анимированная рамка */
-        @keyframes borderGlow {
-            0%, 100% { border-color: rgba(0,255,204,0.3); }
-            50% { border-color: rgba(255,0,170,0.5); }
-        }
-        .card-glow-anim { animation: borderGlow 3s ease-in-out infinite; }
+/* ─── опыт / навыки ─── */
+.exp{display:grid;grid-template-columns:180px 1fr;gap:28px;padding:6px 0}
+@media(max-width:700px){.exp{grid-template-columns:1fr;gap:6px}}
+.when b{display:block;font-family:var(--serif);font-weight:600;font-size:22px;color:var(--acc)}
+.when small{display:block;font-family:var(--mono);font-size:12px;color:var(--mut2);margin-top:2px}
+.when .chip{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:var(--chip);color:var(--acc);padding:3px 9px;margin-top:10px;text-decoration:none}
+.exp h3{font-family:var(--serif);font-weight:600;font-size:24px;line-height:1.25}
+.exp .m{color:var(--mut);font-size:14.5px;margin:4px 0 14px}
+.skills{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:860px){.skills{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.skills{grid-template-columns:1fr}}
+.sk{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:18px 20px}
+.sk h4{font-family:var(--mono);font-weight:500;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:8px}
+.sk p{font-size:15px;color:var(--ink2);line-height:1.6}
+.edu{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:700px){.edu{grid-template-columns:1fr}}
+.edu .sk b{font-family:var(--serif);font-weight:600;font-size:19px;display:block;margin-bottom:4px}
 
-        /* Появление при скролле */
-        .reveal {
-            opacity: 0; transform: translateY(50px);
-            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
-        .reveal-delay-1 { transition-delay: 0.1s; }
-        .reveal-delay-2 { transition-delay: 0.25s; }
-        .reveal-delay-3 { transition-delay: 0.4s; }
+/* ─── контакты ─── */
+.contact{background:var(--ink);color:var(--bg);border-radius:8px;padding:48px 44px;display:grid;grid-template-columns:1.1fr 1fr;gap:36px;align-items:center}
+@media(max-width:820px){.contact{grid-template-columns:1fr;padding:36px 26px}}
+.contact h2{font-family:var(--serif);font-weight:600;font-size:clamp(30px,4.6vw,44px);line-height:1.1}
+.contact p{color:#CFC4B9;margin-top:12px;font-size:16.5px}
+.clinks{display:flex;flex-direction:column;gap:10px}
+.clink{display:flex;align-items:center;justify-content:space-between;gap:16px;text-decoration:none;border:1px solid rgba(255,253,249,.18);
+  border-radius:6px;padding:15px 18px;transition:.15s}
+.clink:hover{background:rgba(255,253,249,.07);border-color:rgba(255,253,249,.4)}
+.clink span{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:#B8AA9C}
+.clink b{font-weight:500;font-size:16px}
+footer{padding:30px 0 46px;color:var(--mut2);font-family:var(--mono);font-size:12px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 
-        /* Модальное окно */
-        .modal-img {
-            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-            cursor: zoom-in;
-        }
-        .modal-img:hover { transform: scale(1.03); }
+/* ─── лайтбокс ─── */
+.lb{position:fixed;inset:0;z-index:100;background:rgba(15,12,10,.94);display:none;align-items:center;justify-content:center;padding:56px 64px}
+.lb.on{display:flex}
+.lb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:4px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.lb button{position:absolute;color:#F3E7DA;font-size:28px;line-height:1;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.lb button:hover{background:rgba(255,255,255,.08)}
+.lb .x{top:12px;right:12px}.lb .pv{left:10px;top:50%;transform:translateY(-50%)}.lb .nx{right:10px;top:50%;transform:translateY(-50%)}
+.lb .cap{position:absolute;bottom:16px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:12px;color:#B8AA9C}
+@media(max-width:600px){.lb{padding:56px 8px}}
 
-        /* Кнопка с переливающимся градиентом */
-        .btn-future { position: relative; overflow: hidden; z-index: 1; transition: all 0.4s; }
-        .btn-future::before {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(135deg, #00ffcc33, #ff00aa33, #8b5cf633);
-            background-size: 300% 300%;
-            animation: gradientShift 5s ease infinite;
-            z-index: -1; border-radius: inherit;
-        }
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-        .btn-future:hover { transform: translateY(-3px); box-shadow: 0 10px 35px rgba(0,255,200,0.35); }
-
-        /* Навигационные ссылки */
-        .nav-link {
-            position: relative; transition: color 0.3s;
-            padding-bottom: 6px;
-        }
-        .nav-link::after {
-            content: ''; position: absolute; bottom: 0; left: 50%;
-            width: 0; height: 2px;
-            background: #00ffcc;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            transform: translateX(-50%);
-            box-shadow: 0 0 12px #00ffcc;
-        }
-        .nav-link:hover::after { width: 80%; }
-
-        /* Эффект печатной машинки */
-        @keyframes blink-caret { 50% { border-color: transparent; } }
-        .typewriter {
-            border-right: 3px solid #00ffcc;
-            animation: blink-caret 1s step-end infinite;
-            white-space: nowrap; display: inline-block;
-            max-width: 100%; overflow: hidden;
-        }
-
-        /* Кнопки переключения языка */
-        .lang-btn {
-            transition: all 0.3s; border: 1px solid rgba(0,255,204,0.3);
-            padding: 0.25rem 0.75rem; border-radius: 9999px; font-weight: 600; cursor: pointer;
-        }
-        .lang-btn.active {
-            background: rgba(0,255,204,0.15); border-color: #00ffcc;
-            box-shadow: 0 0 15px #00ffcc44; color: #00ffcc;
-        }
-    </style>
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
 </head>
-<body class="bg-[#03050f]">
+<body>
 
-    <div class="cyber-grid"></div>
-    <div class="particles-container" id="particles"></div>
+<div class="top"><div class="wrap">
+  <a class="mark" href="#top">N.&thinsp;Sergienko<span>.</span></a>
+  <nav class="nav" aria-label="Разделы">
+    <a href="#projects" data-i="nav.projects">Проекты</a>
+    <a href="#experience" data-i="nav.exp">Опыт</a>
+    <a href="#skills" data-i="nav.skills">Навыки</a>
+    <a href="#contact" data-i="nav.contact">Контакты</a>
+  </nav>
+  <div class="lang" role="group" aria-label="Язык / Language">
+    <button data-lang="ru" aria-pressed="true">RU</button>
+    <button data-lang="en" aria-pressed="false">EN</button>
+  </div>
+  <a class="cv-top" href="resume.pdf" target="_blank" rel="noopener" data-i="cv.short">Резюме</a>
+</div></div>
 
-    <div class="content-layer">
-
-        <!-- NAV -->
-        <nav class="fixed top-0 w-full z-50 glass-future rounded-none border-t-0 border-x-0" style="backdrop-filter: blur(28px) saturate(180%);">
-            <div class="max-w-7xl mx-auto px-6 md:px-8 py-5 flex justify-between items-center">
-                <h1 class="text-2xl md:text-3xl font-bold tracking-widest glitch-hover" data-text="N.SERG">
-                    <span class="neon-cyan">N.SERG</span>
-                </h1>
-                <div class="flex items-center gap-8">
-                    <div class="hidden md:flex gap-10 text-base font-medium tracking-wider">
-                        <a href="#about" class="nav-link text-gray-300 hover:text-cyan-300 transition" data-i18n="nav.about">ABOUT</a>
-                        <a href="#projects" class="nav-link text-gray-300 hover:text-cyan-300 transition" data-i18n="nav.projects">PROJECTS</a>
-                        <a href="#contact" class="nav-link text-gray-300 hover:text-cyan-300 transition" data-i18n="nav.contact">CONTACT</a>
-                    </div>
-                    <div class="flex items-center gap-1 text-sm font-semibold">
-                        <button id="lang-ru" class="lang-btn active">RU</button>
-                        <button id="lang-en" class="lang-btn">EN</button>
-                        <button id="lang-ja" class="lang-btn">JP</button>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <!-- HERO -->
-        <section class="min-h-screen flex items-center pt-20 relative">
-            <div class="max-w-6xl mx-auto px-8 text-center relative z-10">
-                <div class="reveal">
-                    <h2 class="text-6xl md:text-8xl font-extrabold mb-6 tracking-tighter neon-cyan glitch-hover" data-i18n="hero.title">UNREAL ENGINE 5 DEVELOPER</h2>
-                </div>
-                <div class="reveal reveal-delay-1">
-                    <p class="text-2xl md:text-3xl text-slate-400 mb-10 font-light tracking-wider">Nikita Sergienko</p>
-                </div>
-                <div class="reveal reveal-delay-2">
-                    <div class="inline-block glass-future px-8 md:px-12 py-5 rounded-3xl mb-14">
-                        <p class="text-cyan-300 text-lg md:text-xl typewriter" data-i18n="hero.subtitle">Creating next-generation worlds</p>
-                    </div>
-                </div>
-                <div class="reveal reveal-delay-3">
-                    <a href="#projects" class="btn-future inline-block bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 px-12 md:px-16 py-6 rounded-2xl text-xl md:text-2xl font-semibold transition-all text-white shadow-2xl" data-i18n="hero.button">
-                        VIEW PROJECTS <i class="fas fa-arrow-right ml-3"></i>
-                    </a>
-                </div>
-            </div>
-            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 w-40 h-[1px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60"></div>
-        </section>
-
-        <!-- ABOUT -->
-        <section id="about" class="py-32 relative">
-            <div class="max-w-4xl mx-auto px-8">
-                <div class="reveal">
-                    <h2 class="text-4xl md:text-5xl font-bold mb-12 text-center neon-pink glitch-hover" data-i18n="about.title">IDENTIFICATION PROTOCOL</h2>
-                </div>
-                <div class="reveal reveal-delay-1">
-                    <div class="glass-future p-10 md:p-12 rounded-3xl text-lg leading-relaxed space-y-6 border-cyan-500/20" id="about-content">
-                        <!-- Динамический контент -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- PROJECTS -->
-        <section id="projects" class="py-32 relative">
-            <div class="max-w-7xl mx-auto px-8">
-                <div class="reveal">
-                    <h2 class="text-4xl md:text-5xl font-bold mb-16 text-center neon-cyan glitch-hover" data-i18n="projects.title">PROJECTS</h2>
-                </div>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid"></div>
-            </div>
-        </section>
-
-        <!-- MODAL -->
-        <div id="project-modal" class="hidden fixed inset-0 bg-black/92 backdrop-blur-3xl z-[200] flex items-center justify-center p-4 transition-all duration-500">
-            <div class="glass-future max-w-6xl w-full max-h-[92vh] overflow-auto rounded-3xl border-cyan-400/30">
-                <div class="p-8 md:p-10 relative">
-                    <button onclick="closeModal()" class="absolute top-6 right-6 text-3xl text-slate-400 hover:text-white hover:rotate-90 transition-all duration-400 z-10 bg-black/40 rounded-full w-12 h-12 flex items-center justify-center">✕</button>
-                    <h2 id="modal-title" class="text-4xl md:text-5xl font-bold mb-8 neon-cyan pr-14"></h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10" id="modal-images"></div>
-                    <div id="modal-description" class="prose prose-invert text-lg leading-relaxed text-gray-200"></div>
-                </div>
-            </div>
+<main id="top">
+  <div class="wrap">
+    <div class="hero">
+      <div class="hero-grid">
+        <div>
+          <div class="kicker">Unreal Engine 5 Developer</div>
+          <h1 data-i="hero.name">Никита Сергиенко</h1>
+          <p class="lead" data-i="hero.lead"></p>
+          <div class="meta-line"><span>C++ · Blueprint · Multiplayer</span><i>/</i><span data-i="hero.city"></span></div>
+          <div class="cta">
+            <a class="btn pri" href="https://t.me/volis43" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3 18.6 20c-.2 1.1-.9 1.4-1.8.9l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5.1 9.2-8.3c.4-.4-.1-.6-.6-.2L6 13.6 1.1 12c-1.1-.3-1.1-1.1.2-1.6L20.4 3c.9-.3 1.7.2 1.5 1.3z"/></svg>
+              <span data-i="cta.tg">Написать в Telegram</span></a>
+            <a class="btn" href="resume.pdf" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"/></svg>
+              <span data-i="cta.cv">Резюме (PDF)</span></a>
+          </div>
         </div>
-
-        <!-- CONTACT -->
-        <section id="contact" class="py-32 relative">
-            <div class="max-w-2xl mx-auto px-8 text-center">
-                <div class="reveal">
-                    <h2 class="text-4xl md:text-5xl font-bold mb-8 neon-pink glitch-hover" data-i18n="contact.title">GET IN TOUCH</h2>
-                </div>
-                <div class="reveal reveal-delay-1">
-                    <div class="flex flex-col sm:flex-row gap-6 justify-center">
-                        <a href="https://t.me/volis43" target="_blank" class="btn-future inline-flex items-center gap-4 bg-gradient-to-r from-cyan-500 to-blue-600 px-10 py-7 rounded-3xl text-xl md:text-2xl font-semibold transition-all text-white shadow-xl hover:shadow-cyan-500/30">
-                            <i class="fab fa-telegram text-3xl"></i> <span>@volis43</span>
-                        </a>
-                        <a href="mailto:volis1990@gmail.com" class="btn-future inline-flex items-center gap-4 bg-gradient-to-r from-purple-500 to-pink-600 px-10 py-7 rounded-3xl text-xl md:text-2xl font-semibold transition-all text-white shadow-xl hover:shadow-pink-500/30">
-                            <i class="fas fa-envelope text-3xl"></i> <span>volis1990@gmail.com</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <footer class="py-10 text-center text-slate-500 text-sm border-t border-cyan-900/50 relative z-10">
-            <div class="max-w-4xl mx-auto px-8">
-                <p class="tracking-wider" data-i18n="footer.copyright">© 2026 Nikita Sergienko • <span class="text-cyan-500">Unreal Engine 5</span> Portfolio</p>
-                <p class="text-xs mt-2 text-slate-600" data-i18n="footer.tagline">Building the future, one world at a time.</p>
-            </div>
-        </footer>
+        <div class="hero-photo"><img src="assets/img/photo.webp" alt="" width="236" height="236"></div>
+      </div>
+      <div class="tiles" id="tiles"></div>
     </div>
+  </div>
 
-    <script>
-        (function() {
-            // ============ ПЕРЕВОДЫ ============
-            const translations = {
-                ru: {
-                    'nav.about': 'ОБО МНЕ',
-                    'nav.projects': 'ПРОЕКТЫ',
-                    'nav.contact': 'КОНТАКТЫ',
-                    'hero.title': 'UNREAL ENGINE 5 DEVELOPER',
-                    'hero.subtitle': 'Создаю миры следующего поколения',
-                    'hero.button': 'СМОТРЕТЬ ПРОЕКТЫ',
-                    'about.title': 'ПРОТОКОЛ ИДЕНТИФИКАЦИИ',
-                    'about.experience': 'Unreal Engine 5 разработчик с <strong class="text-cyan-300">4-летним опытом</strong>. Работал на фрилансе над разнообразными проектами.',
-                    'about.job': 'Ищу работу с мая 2026 года.',
-                    'about.pet': 'Активно развиваю свои pet-проекты:',
-                    'about.horror': 'Кооперативный хоррор <span class="text-cyan-400 font-medium">(релиз — сентябрь 2026)</span>',
-                    'about.souls': 'Souls-like проект <span class="text-amber-400 font-medium">(ищу людей в команду)</span>',
-                    'projects.title': 'ПРОЕКТЫ',
-                    'contact.title': 'СВЯЗАТЬСЯ СО МНОЙ',
-                    'footer.copyright': '© 2026 Никита Сергиенко • <span class="text-cyan-500">Unreal Engine 5</span> Portfolio',
-                    'footer.tagline': 'Строю будущее, один мир за другим.',
-                    'modal.clickHint': 'Нажмите для подробностей',
-                    'projects': [
-                        { title: "Fabric Ashesh", images: ["f1.png","f2.png","f3.png","f4.png"], desc: `<p class="text-gray-200">Атмосферный кооперативный хоррор на 1–4 игроков. Игра содержит кооперативные загадки, напряжённую атмосферу и интересные механики.</p><p class="mt-4 text-cyan-400 font-semibold">Релиз — сентябрь 2026. Название временное.</p>` },
-                        { title: "Damn Fire", images: ["p1.png","sp2.png","sp3.png","sp4.png"], desc: `<p class="text-gray-200">Сложный Souls-like проект в тёмном фэнтези мире. Многие механики уже работают, в том числе мультиплеер.</p><p class="mt-4 text-amber-400 font-semibold">Ищу людей в команду (3D Artist, Animator, Concept Artist).</p>` },
-                        { title: "Faction Glitch", images: ["fg1.png","fg2.png","fg3.png","fg4.png"], desc: `<p class="text-gray-200">Одиночная хоррор-игра с глубоким сюжетом и уникальной стилистикой.</p>` },
-                        { title: "Matritz", images: ["m1.png","m2.png","m3.png","m4.png"], desc: `<p class="text-gray-200">Учебный проект для зачёта на 3 курсе. Опыт работы с UE5, оптимизацией и механиками.</p>` }
-                    ]
-                },
-                en: {
-                    'nav.about': 'ABOUT',
-                    'nav.projects': 'PROJECTS',
-                    'nav.contact': 'CONTACT',
-                    'hero.title': 'UNREAL ENGINE 5 DEVELOPER',
-                    'hero.subtitle': 'Crafting next-generation worlds',
-                    'hero.button': 'VIEW PROJECTS',
-                    'about.title': 'IDENTIFICATION PROTOCOL',
-                    'about.experience': 'Unreal Engine 5 developer with <strong class="text-cyan-300">4 years of experience</strong>. Worked as a freelancer on diverse projects.',
-                    'about.job': 'Open to work from May 2026.',
-                    'about.pet': 'Actively developing my pet projects:',
-                    'about.horror': 'Co-op horror <span class="text-cyan-400 font-medium">(release — September 2026)</span>',
-                    'about.souls': 'Souls-like project <span class="text-amber-400 font-medium">(looking for teammates)</span>',
-                    'projects.title': 'PROJECTS',
-                    'contact.title': 'GET IN TOUCH',
-                    'footer.copyright': '© 2026 Nikita Sergienko • <span class="text-cyan-500">Unreal Engine 5</span> Portfolio',
-                    'footer.tagline': 'Building the future, one world at a time.',
-                    'modal.clickHint': 'Click for details',
-                    'projects': [
-                        { title: "Fabric Ashesh", images: ["f1.png","f2.png","f3.png","f4.png"], desc: `<p class="text-gray-200">Atmospheric co-op horror for 1-4 players. Features cooperative puzzles and tense atmosphere.</p><p class="mt-4 text-cyan-400 font-semibold">Release — September 2026. Working title.</p>` },
-                        { title: "Damn Fire", images: ["p1.png","sp2.png","sp3.png","sp4.png"], desc: `<p class="text-gray-200">Challenging Souls-like in a dark fantasy world. Multiplayer mechanics implemented.</p><p class="mt-4 text-amber-400 font-semibold">Seeking teammates (3D Artist, Animator, Concept Artist).</p>` },
-                        { title: "Faction Glitch", images: ["fg1.png","fg2.png","fg3.png","fg4.png"], desc: `<p class="text-gray-200">Single-player horror with deep story and unique visual style.</p>` },
-                        { title: "Matritz", images: ["m1.png","m2.png","m3.png","m4.png"], desc: `<p class="text-gray-200">Academic project for 3rd-year credit. Gained UE5, optimization and mechanics experience.</p>` }
-                    ]
-                },
-                ja: {
-                    'nav.about': 'アバウト',
-                    'nav.projects': 'プロジェクト',
-                    'nav.contact': 'コンタクト',
-                    'hero.title': 'UNREAL ENGINE 5 DEVELOPER',
-                    'hero.subtitle': '次世代の世界を創造する',
-                    'hero.button': 'プロジェクトを見る',
-                    'about.title': '識別プロトコル',
-                    'about.experience': 'Unreal Engine 5開発者、<strong class="text-cyan-300">4年の経験</strong>。フリーランスで様々なプロジェクトに参加。',
-                    'about.job': '2026年5月から就職活動中。',
-                    'about.pet': '現在開発中の個人プロジェクト:',
-                    'about.horror': '協力ホラー <span class="text-cyan-400 font-medium">(2026年9月リリース予定)</span>',
-                    'about.souls': 'Souls-likeプロジェクト <span class="text-amber-400 font-medium">(チームメンバー募集中)</span>',
-                    'projects.title': 'プロジェクト',
-                    'contact.title': '連絡先',
-                    'footer.copyright': '© 2026 ニキータ・セルギエンコ • <span class="text-cyan-500">Unreal Engine 5</span> ポートフォリオ',
-                    'footer.tagline': '未来を一つの世界ずつ構築する。',
-                    'modal.clickHint': '詳細はクリック',
-                    'projects': [
-                        { title: "Fabric Ashesh", images: ["f1.png","f2.png","f3.png","f4.png"], desc: `<p class="text-gray-200">1〜4人用協力ホラー。協力パズルと緊迫した雰囲気。</p><p class="mt-4 text-cyan-400 font-semibold">2026年9月リリース予定。仮タイトル。</p>` },
-                        { title: "Damn Fire", images: ["p1.png","sp2.png","sp3.png","sp4.png"], desc: `<p class="text-gray-200">ダークファンタジー世界のSouls-like。マルチプレイ対応。</p><p class="mt-4 text-amber-400 font-semibold">チームメンバー募集中 (3Dアーティスト、アニメーター等)。</p>` },
-                        { title: "Faction Glitch", images: ["fg1.png","fg2.png","fg3.png","fg4.png"], desc: `<p class="text-gray-200">深いストーリーと独自のビジュアルスタイルのシングルプレイホラー。</p>` },
-                        { title: "Matritz", images: ["m1.png","m2.png","m3.png","m4.png"], desc: `<p class="text-gray-200">大学3年の単位取得のための学術プロジェクト。UE5の経験を積む。</p>` }
-                    ]
-                }
-            };
+  <section id="projects"><div class="wrap">
+    <div class="sec-h" data-i="sec.projects">Проекты</div>
+    <p class="sec-sub" data-i="sec.projects.sub"></p>
+    <div id="projlist"></div>
+  </div></section>
 
-            let currentLang = 'ru';
+  <section id="experience" style="padding-top:20px"><div class="wrap">
+    <div class="sec-h" data-i="sec.exp">Опыт работы</div>
+    <div class="exp">
+      <div class="when"><b>2023-2026</b><small data-i="exp.when"></small>
+        <a class="chip" href="https://kwork.ru/game-dev/27923514/razrabotka-igry-na-unreal-engine-5" target="_blank" rel="noopener">Kwork ↗</a></div>
+      <div>
+        <h3 data-i="exp.title"></h3>
+        <div class="m" data-i="exp.meta"></div>
+        <ul class="points" id="exppoints"></ul>
+      </div>
+    </div>
+  </div></section>
 
-            // ============ INTERSECTION OBSERVER ============
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.18, rootMargin: '0px 0px -40px 0px' });
+  <section id="skills"><div class="wrap">
+    <div class="sec-h" data-i="sec.skills">Навыки</div>
+    <div class="skills" id="skills-grid"></div>
+    <div class="edu" id="edu"></div>
+  </div></section>
 
-            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  <section id="contact"><div class="wrap">
+    <div class="contact">
+      <div>
+        <h2 data-i="ct.title"></h2>
+        <p data-i="ct.text"></p>
+      </div>
+      <div class="clinks">
+        <a class="clink" href="https://t.me/volis43" target="_blank" rel="noopener"><span>Telegram</span><b>@volis43</b></a>
+        <a class="clink" href="mailto:volis1990@gmail.com"><span>Email</span><b>volis1990@gmail.com</b></a>
+        <a class="clink" href="https://kwork.ru/game-dev/27923514/razrabotka-igry-na-unreal-engine-5" target="_blank" rel="noopener"><span>Kwork</span><b>volis43 ↗</b></a>
+        <a class="clink" href="resume.pdf" target="_blank" rel="noopener"><span data-i="ct.cv">Резюме</span><b>PDF ↓</b></a>
+      </div>
+    </div>
+  </div></section>
 
-            // ============ ПРИМЕНЕНИЕ ЯЗЫКА ============
-            function applyLanguage(lang) {
-                currentLang = lang;
-                document.documentElement.lang = lang;
-                document.querySelectorAll('[data-i18n]').forEach(el => {
-                    const key = el.getAttribute('data-i18n');
-                    if (translations[lang] && translations[lang][key]) {
-                        el.innerHTML = translations[lang][key];
-                    }
-                });
-                const aboutContent = document.getElementById('about-content');
-                if (aboutContent) {
-                    const t = translations[lang];
-                    aboutContent.innerHTML = `
-                        <p class="text-gray-200">${t['about.experience']}</p>
-                        <p class="text-pink-300 font-semibold text-xl">${t['about.job']}</p>
-                        <p class="text-gray-200">${t['about.pet']}</p>
-                        <ul class="space-y-3 text-gray-300">
-                            <li class="flex items-start gap-3"><span class="text-cyan-400 mt-1"><i class="fas fa-ghost"></i></span><span>${t['about.horror']}</span></li>
-                            <li class="flex items-start gap-3"><span class="text-amber-400 mt-1"><i class="fas fa-skull"></i></span><span>${t['about.souls']}</span></li>
-                        </ul>
-                    `;
-                }
-                document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-                const activeBtn = document.getElementById(`lang-${lang}`);
-                if (activeBtn) activeBtn.classList.add('active');
-                renderProjectCards();
-                localStorage.setItem('preferredLang', lang);
-            }
+  <div class="wrap"><footer><span>© 2026 <span data-i="hero.name">Никита Сергиенко</span></span><span>Unreal Engine 5 · C++ · Blueprint</span></footer></div>
+</main>
 
-            // ============ КАРТОЧКИ ПРОЕКТОВ ============
-            function renderProjectCards() {
-                const grid = document.getElementById('projects-grid');
-                if (!grid) return;
-                grid.innerHTML = '';
-                const projects = translations[currentLang].projects;
-                projects.forEach((project, index) => {
-                    const card = document.createElement('div');
-                    card.className = `project-card glass-future rounded-3xl overflow-hidden cursor-pointer border card-glow-anim reveal`;
-                    card.style.transitionDelay = (index * 0.1) + 's';
-                    card.innerHTML = `
-                        <div class="relative h-80 card-img-wrapper">
-                            <img src="${project.images[0]}" class="w-full h-full object-cover" alt="${project.title}" loading="lazy">
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                            <div class="absolute bottom-6 left-6 right-6">
-                                <h3 class="text-2xl font-bold neon-cyan">${project.title}</h3>
-                                <p class="text-slate-400 text-sm mt-1">${translations[currentLang]['modal.clickHint']} <i class="fas fa-external-link-alt ml-1"></i></p>
-                            </div>
-                            <div class="absolute top-4 right-4 bg-black/60 rounded-full w-10 h-10 flex items-center justify-center text-cyan-400 text-sm border border-cyan-500/30">
-                                ${project.images.length}<i class="fas fa-image ml-1 text-xs"></i>
-                            </div>
-                        </div>
-                    `;
-                    card.onclick = () => openModal(index);
-                    grid.appendChild(card);
-                    observer.observe(card);
-                });
-            }
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Просмотр изображения">
+  <button class="x" aria-label="Закрыть">×</button>
+  <button class="pv" aria-label="Предыдущее">‹</button>
+  <img alt="">
+  <button class="nx" aria-label="Следующее">›</button>
+  <div class="cap"></div>
+</div>
 
-            // ============ МОДАЛЬНОЕ ОКНО ============
-            function openModal(index) {
-                const project = translations[currentLang].projects[index];
-                document.getElementById('modal-title').textContent = project.title;
-                document.getElementById('modal-images').innerHTML = project.images.map(src => 
-                    `<img src="${src}" class="modal-img rounded-2xl w-full shadow-2xl border border-cyan-500/30 object-cover h-64 md:h-72" loading="lazy">`
-                ).join('');
-                document.getElementById('modal-description').innerHTML = project.desc;
-                const modal = document.getElementById('project-modal');
-                modal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-                modal.style.opacity = '0';
-                requestAnimationFrame(() => {
-                    modal.style.opacity = '1';
-                    modal.style.transition = 'opacity 0.4s ease';
-                });
-            }
+<script>
+"use strict";
+/* ════════════════ ТЕКСТЫ ════════════════ */
+const T={
+ ru:{
+  "nav.projects":"Проекты","nav.exp":"Опыт","nav.skills":"Навыки","nav.contact":"Контакты","cv.short":"Резюме",
+  "hero.name":"Никита Сергиенко",
+  "hero.lead":"Геймплейный программист на Unreal Engine 5. Делаю механики и мультиплеер: C++, Blueprint, Gameplay Ability System, репликация.",
+  "hero.city":"Екатеринбург · открыт к предложениям",
+  "cta.tg":"Написать в Telegram","cta.cv":"Резюме (PDF)",
+  "sec.projects":"Проекты",
+  "sec.projects.sub":"Видео механик и скриншоты. Графика местами черновая: я показываю системы и код, а не арт.",
+  "sec.exp":"Опыт работы","sec.skills":"Навыки",
+  "exp.when":"с января 2023 по май 2026","exp.title":"Unreal Engine 5 Developer, фриланс",
+  "exp.meta":"3+ года · 10+ выполненных заказов",
+  "ct.title":"Давайте сделаем игру вместе","ct.text":"Ищу работу геймплейным или сетевым программистом на UE5. Быстрее всего отвечаю в Telegram.","ct.cv":"Резюме",
+  "video.soon":"видео механик скоро","clips":"Механики крупным планом","open":"Открыть изображение","seek":"в видео с"
+ },
+ en:{
+  "nav.projects":"Projects","nav.exp":"Experience","nav.skills":"Skills","nav.contact":"Contact","cv.short":"Résumé",
+  "hero.name":"Nikita Sergienko",
+  "hero.lead":"Gameplay programmer working in Unreal Engine 5. I build mechanics and multiplayer: C++, Blueprint, Gameplay Ability System, replication.",
+  "hero.city":"Yekaterinburg, Russia · open to offers",
+  "cta.tg":"Message on Telegram","cta.cv":"Résumé (PDF, RU)",
+  "sec.projects":"Projects",
+  "sec.projects.sub":"Mechanics videos and screenshots. Some graphics are placeholder: I'm showing systems and code, not art.",
+  "sec.exp":"Experience","sec.skills":"Skills",
+  "exp.when":"January 2023 to May 2026","exp.title":"Unreal Engine 5 Developer, freelance",
+  "exp.meta":"3+ years · 10+ completed orders",
+  "ct.title":"Let's make a game together","ct.text":"Looking for a gameplay or network programmer role in UE5. Telegram is the fastest way to reach me.","ct.cv":"Résumé",
+  "video.soon":"mechanics video coming soon","clips":"Mechanics up close","open":"Open image","seek":"in video at"
+ }
+};
+const TILES=[
+ {b:{ru:"3+ года",en:"3+ years"},s:{ru:"опыта на Unreal Engine 5",en:"with Unreal Engine 5"}},
+ {b:{ru:"10+",en:"10+"},s:{ru:"заказов на Kwork",en:"freelance orders on Kwork"}},
+ {b:{ru:"5 игр",en:"5 games"},s:{ru:"на Unity для Яндекс Игр",en:"in Unity for Yandex Games"}},
+ {b:{ru:"GAS",en:"GAS"},s:{ru:"поднят с нуля на C++",en:"built from scratch in C++"}}
+];
+const EXP={
+ ru:["Геймплейные механики и Blueprint/C++ логика для сторонних UE5-проектов: боевые системы, инвентарь, взаимодействие с объектами, ИИ, UMG.",
+     "Мультиплеер: репликация, RepNotify, Server/Client/Multicast RPC, серверная валидация, отладка рассинхронов на Listen и Dedicated Server.",
+     "Проекты разных стадий, от прототипов до чужих кодовых баз: рефакторинг Blueprint в C++, разбор кода, исправление багов.",
+     "Оптимизация: профилирование, Nanite/LOD, настройки стриминга под средние конфигурации.",
+     "Техническая документация и объяснение решений заказчикам; Git / Git LFS в общих репозиториях."],
+ en:["Gameplay mechanics and Blueprint/C++ logic for client UE5 projects: combat, inventory, object interaction, AI, UMG.",
+     "Multiplayer: replication, RepNotify, Server/Client/Multicast RPCs, server-side validation, desync debugging on Listen and Dedicated Server.",
+     "Projects at every stage, from prototypes to existing codebases: Blueprint-to-C++ refactoring, reading others' code, bug fixing.",
+     "Optimization: profiling, Nanite/LOD, streaming settings for mid-range hardware.",
+     "Technical documentation and explaining decisions to non-technical clients; Git / Git LFS in shared repositories."]
+};
+const SKILLS=[
+ {h:{ru:"Движок",en:"Engine"},p:"Unreal Engine 5 · C++ · Blueprint"},
+ {h:{ru:"Мультиплеер",en:"Multiplayer"},p:"Replication · RepNotify · RPC (Server / Client / Multicast) · Listen & Dedicated Server"},
+ {h:{ru:"GAS",en:"GAS"},p:"AttributeSet · AbilitySystemComponent · Gameplay Effects · Tags · Cues"},
+ {h:{ru:"Системы UE",en:"UE systems"},p:"Enhanced Input · Character Movement · UMG · World Partition · Data Layers · HLOD · Niagara"},
+ {h:{ru:"Также",en:"Also"},p:{ru:"Unity · C#: браузерные игры (WebGL) для Яндекс Игр",en:"Unity · C#: browser games (WebGL) for Yandex Games"}},
+ {h:{ru:"Инструменты",en:"Tools"},p:{ru:"Visual Studio · UnrealBuildTool · Git / Git LFS · Unreal Insights, stat-команды",en:"Visual Studio · UnrealBuildTool · Git / Git LFS · Unreal Insights, stat commands"}}
+];
+const EDU=[
+ {h:{ru:"Образование",en:"Education"},b:{ru:"Колледж цифровых технологий",en:"College of Digital Technologies"},
+  p:{ru:"«Разработка компьютерных игр, дополненной и виртуальной реальности» · Екатеринбург · диплом 2026",en:"Game, AR & VR Development programme · Yekaterinburg · graduated 2026"}},
+ {h:{ru:"Языки",en:"Languages"},b:{ru:"Русский: родной",en:"Russian: native"},
+  p:{ru:"Английский: B1 (технический) · Японский: N5, изучаю самостоятельно",en:"English: B1 (technical) · Japanese: N5, self-taught"}}
+];
 
-            window.closeModal = function() {
-                const modal = document.getElementById('project-modal');
-                modal.style.opacity = '0';
-                setTimeout(() => {
-                    modal.classList.add('hidden');
-                    document.body.style.overflow = '';
-                }, 350);
-            };
+/* ════════════════ ПРОЕКТЫ ════════════════
+   Новая игра = ещё один объект в этом списке.
+   video:  {src, poster}: главное видео (если его нет, показывается галерея)
+   clips:  [{src, poster, ts, ru:{t,d}, en:{t,d}}]: короткие клипы механик
+   images: ["имя"]: файлы assets/img/имя.webp и имя-s.webp                    */
+const PROJECTS=[
+ {id:"damn-fire", title:"Damn Fire",
+  kick:{ru:"Кооперативный Action/RPG · souls-like",en:"Co-op action RPG · souls-like"},
+  status:{ru:"В разработке · с 2025",en:"In development · since 2025"},
+  video:{src:"assets/video/damnfire.mp4",poster:"assets/video/damnfire.webp"},
+  clips:[
+   {id:"inventory",at:5.5,ru:{t:"Инвентарь",d:"Подбор предметов, категории, действия с предметом: назначить, выбросить, удалить. В логе видно, что команды идут через сервер."},
+                         en:{t:"Inventory",d:"Item pickup, categories and item actions: assign, drop, delete. The log shows the commands going through the server."}},
+   {id:"chase",at:24.5,ru:{t:"Противники",d:"Группа ИИ-противников вокруг игрока."},
+                      en:{t:"Enemies",d:"A group of AI enemies around the player."}},
+   {id:"cage",at:43.5,ru:{t:"Ловушка-клетка",d:"Клетка падает сверху и запирает игрока."},
+                     en:{t:"Cage trap",d:"A cage drops from above and traps the player."}},
+   {id:"ledge",at:61,ru:{t:"Подъём на уступы",d:"Зацеп за край блока и подъём наверх."},
+                    en:{t:"Ledge climbing",d:"Grabbing a ledge and climbing up."}},
+   {id:"ladder",at:84.5,ru:{t:"Лестницы",d:"Подъём по лестнице и выход на площадку наверху."},
+                       en:{t:"Ladders",d:"Climbing a ladder and stepping off at the top."}},
+   {id:"chest",at:114,ru:{t:"Сундук",d:"Взаимодействие с объектом: персонаж открывает сундук."},
+                     en:{t:"Chest",d:"Object interaction: the character opens a chest."}},
+   {id:"status",at:128,ru:{t:"Шкала статуса",d:"Шкала накопления статус-эффекта над персонажем, в духе Elden Ring."},
+                      en:{t:"Status buildup",d:"A status-effect buildup meter above the character, Elden Ring style."}},
+   {id:"bonfire",at:159.5,ru:{t:"Костёр",d:"Персонаж садится у костра, огонь разгорается: точка отдыха."},
+                         en:{t:"Bonfire",d:"The character rests as the bonfire lights up: a checkpoint."}}
+  ],
+  images:["p1","sp2","sp3","sp4"],
+  desc:{ru:"Souls-like в тёмном фэнтези на несколько игроков. Отвечаю за геймплей-программирование и сетевую архитектуру; многие системы уже работают, включая мультиплеер.",
+        en:"A dark-fantasy souls-like for several players. I own gameplay programming and network architecture; many systems already work, multiplayer included."},
+  tags:["C++","Blueprint","GAS","Replication","World Partition"],
+  points:{ru:["<b>Gameplay Ability System с нуля:</b> свой UAttributeSet с репликацией и клампингом, Gameplay Effects для урона и статусов.",
+              "<b>Статус-эффекты в духе Elden Ring:</b> шкалы накопления, прок в PostGameplayEffectExecute, растущая сопротивляемость, Gameplay Cues.",
+              "<b>Наблюдение после смерти:</b> серверная авторитетная смерть, передача ViewTarget клиенту, устранена гонка Pawn ↔ Client RPC.",
+              "<b>Сетевые интерактивные объекты:</b> RepNotify, Multicast для косметики, серверная валидация и защита от дюпа предметов.",
+              "<b>Открытый мир:</b> World Partition, HLOD, Data Layers, проверка стриминга при нескольких игроках."],
+          en:["<b>Gameplay Ability System from scratch:</b> custom replicated, clamped UAttributeSet; Gameplay Effects for damage and statuses.",
+              "<b>Elden Ring style status effects:</b> buildup meters, procs in PostGameplayEffectExecute, growing resistance, Gameplay Cues.",
+              "<b>Spectating after death:</b> server-authoritative death, ViewTarget handoff to the owning client, fixed a Pawn ↔ Client RPC race.",
+              "<b>Networked interactables:</b> RepNotify, Multicast for cosmetics, server-side validation and item-dupe protection.",
+              "<b>Open world:</b> World Partition, HLOD, Data Layers, streaming tested with several connected players."]}},
 
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    const modal = document.getElementById('project-modal');
-                    if (!modal.classList.contains('hidden')) window.closeModal();
-                }
-            });
-            document.getElementById('project-modal').addEventListener('click', function(e) {
-                if (e.target === this) window.closeModal();
-            });
+ {id:"coop-horror", title:"UwU Puwu complex",
+  kick:{ru:"Кооперативный хоррор · 1-4 игрока",en:"Co-op horror · 1-4 players"},
+  status:{ru:"Релиз в Steam: 14 февраля 2027",en:"Steam release: 14 February 2027"}, live:true,
+  video:{src:"assets/video/uwu.mp4",poster:"assets/video/uwu.webp"},
+  clipBase:"assets/video/uwu/",
+  clips:[
+   {id:"tablet",at:0,ru:{t:"Планшет",d:"Внутриигровой планшет: чат между игроками, камера и отправка фото. Снимок с одного клиента сразу появляется у другого."},
+                    en:{t:"Tablet",d:"In-game tablet: player chat, a camera and photo sharing. A photo taken on one client shows up on the other right away."}},
+   {id:"glass",at:32.6,ru:{t:"Загадка со стеклом",d:"Один игрок видит код через смотровое стекло, второй вводит его на панели, и дверь открывается."},
+                   en:{t:"Viewing-glass puzzle",d:"One player reads the code through the viewing glass, the other enters it on the panel, and the door opens."}},
+   {id:"block",at:63.5,ru:{t:"Плита для напарника",d:"Один игрок стоит на плите и держит дверь, второй проходит. Счётчик 1/1 одинаковый у обоих игроков."},
+                   en:{t:"Plate for a teammate",d:"One player stands on the plate to hold the door while the other gets through. The 1/1 counter matches for both players."}},
+   {id:"death",at:82.8,ru:{t:"Смерть и наблюдение",d:"Погибший видит «Вы погибли» и смотрит глазами напарника. Вернуть его можно дефибриллятором."},
+                   en:{t:"Death and spectating",d:"The fallen player gets a «You died» screen and spectates a teammate, who can revive them with a defibrillator."}},
+   {id:"doors",at:94.4,ru:{t:"Замки на дверях",d:"Цветная панель-головоломка и кодовый замок: игрок находит код 3055 и набирает его."},
+                   en:{t:"Door locks",d:"A colour-panel puzzle and a keypad lock: the player finds the code 3055 and types it in."}},
+   {id:"qte",at:130.8,ru:{t:"QTE",d:"Вентиль и генератор запускаются через QTE: кнопка E и кольцо тайминга."},
+                 en:{t:"QTE",d:"The valve and the generator start through a QTE: an E prompt and a timing ring."}},
+   {id:"laser1",at:166.7,ru:{t:"Отражение луча",d:"Луч лазера отражается от зеркала и меняет направление."},
+                    en:{t:"Beam reflection",d:"The laser beam bounces off a mirror and changes direction."}},
+   {id:"laser2",at:185.5,ru:{t:"Лазер и зеркало",d:"Двери не хватает энергии: луч нужно навести на приёмник через зеркало. Приёмник загорается зелёным, дверь открывается."},
+                    en:{t:"Laser and mirror",d:"The door lacks power: bounce the beam off a mirror into the receiver. It turns green and the door opens."}}
+  ],
+  images:["f3","f1","f2","f4"],
+  desc:{ru:"Атмосферный кооперативный хоррор на 1-4 игроков, построенный на совместных загадках. Делаю геймплей и сетевую часть. В половине роликов два окна рядом, клиент и сервер: видно, что состояние синхронизируется.",
+        en:"An atmospheric co-op horror for 1-4 players built around shared puzzles. I do the gameplay and networking. Half of the clips show two windows side by side, client and server, so you can see the state stay in sync."},
+  tags:["UE5","C++","Blueprint","Replication","Co-op"],
+  points:{ru:["<b>Кооперативные загадки:</b> код через смотровое стекло, плита, которая держит дверь для напарника, лазер с зеркалом.",
+              "<b>Планшет:</b> чат между игроками, камера и отправка фото по сети.",
+              "<b>Смерть и наблюдение:</b> камера погибшего переключается на напарника, возрождение дефибриллятором.",
+              "<b>Взаимодействие:</b> кодовые замки, цветная панель-головоломка, QTE с вентилем и генератором."],
+          en:["<b>Co-op puzzles:</b> a code read through viewing glass, a plate that holds a door for a teammate, a laser with a mirror.",
+              "<b>Tablet:</b> player chat, a camera and photo sharing over the network.",
+              "<b>Death and spectating:</b> the fallen player's camera switches to a teammate; revival with a defibrillator.",
+              "<b>Interaction:</b> keypad locks, a colour-panel puzzle, QTEs with a valve and a generator."]}},
 
-            // ============ ПЕРЕКЛЮЧАТЕЛИ ЯЗЫКОВ ============
-            document.getElementById('lang-ru').addEventListener('click', () => applyLanguage('ru'));
-            document.getElementById('lang-en').addEventListener('click', () => applyLanguage('en'));
-            document.getElementById('lang-ja').addEventListener('click', () => applyLanguage('ja'));
+ {id:"faction-glitch", title:"Faction Glitch",
+  kick:{ru:"Одиночный хоррор от первого лица",en:"Single-player first-person horror"},
+  status:{ru:"Личный проект · UE5",en:"Personal project · UE5"},
+  images:["fg3","fg1","fg2","fg4"],
+  desc:{ru:"Одиночный хоррор с глубоким сюжетом и собственной стилистикой: стрельба, исследование, туманные локации.",
+        en:"A story-driven single-player horror with its own visual style: shooting, exploration, fog-drenched locations."},
+  tags:["UE5","Blueprint","FPS","Horror"]},
 
-            const savedLang = localStorage.getItem('preferredLang');
-            const browserLang = navigator.language?.startsWith('en') ? 'en' : (navigator.language?.startsWith('ja') ? 'ja' : 'ru');
-            applyLanguage(savedLang || browserLang);
+ {id:"matritz", title:"Matritz",
+  kick:{ru:"Учебный проект · 3 курс",en:"Student project · 3rd year"},
+  status:{ru:"Колледж · UE5",en:"College · UE5"},
+  images:["m3","m1","m2","m4"],
+  desc:{ru:"Проект на зачёт третьего курса: механики, работа с окружением и оптимизация в UE5.",
+        en:"Third-year college project: mechanics, environment work and optimization in UE5."},
+  tags:["UE5","Optimization"]},
 
-            // ============ ПАРТИКЛЫ ============
-            const particlesContainer = document.getElementById('particles');
-            const particleColors = ['#00ffcc', '#ff00aa', '#8b5cf6', '#00ccff', '#ff44cc', '#ffffff'];
-            for (let i = 0; i < 55; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                const size = Math.random() * 4 + 1.5;
-                particle.style.width = size + 'px';
-                particle.style.height = size + 'px';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.background = particleColors[Math.floor(Math.random() * particleColors.length)];
-                particle.style.animationDuration = Math.random() * 18 + 10 + 's';
-                particle.style.animationDelay = Math.random() * 15 + 's';
-                particle.style.boxShadow = `0 0 ${size*3}px ${particle.style.background}`;
-                particlesContainer.appendChild(particle);
-            }
+ {id:"yandex", title:{ru:"Пять игр для Яндекс Игр",en:"Five games for Yandex Games"},
+  kick:{ru:"Unity · C# · WebGL · соло, полный цикл",en:"Unity · C# · WebGL · solo, full cycle"},
+  status:{ru:"На модерации платформы",en:"In platform review"},
+  desc:{ru:"Пять браузерных игр от концепта до билда: геймплей, интерфейс, сборка и страница публикации. Учился укладываться в рамки платформы: размер билда, время загрузки, производительность на слабых устройствах.",
+        en:"Five browser games from concept to build: gameplay, UI, builds and store pages. Learned to fit the platform's limits: build size, load time, performance on low-end devices."},
+  tags:["Unity","C#","WebGL"]}
+];
 
-            // ============ ПАРАЛЛАКС ============
-            const heroSection = document.querySelector('section');
-            let parallaxActive = true;
-            window.addEventListener('mousemove', (e) => {
-                if (!parallaxActive || window.innerWidth < 768) return;
-                const xAxis = (window.innerWidth / 2 - e.clientX) / 50;
-                const yAxis = (window.innerHeight / 2 - e.clientY) / 50;
-                const heroTitle = heroSection?.querySelector('h2');
-                if (heroTitle) heroTitle.style.transform = `translate(${xAxis * 0.6}px, ${yAxis * 0.6}px)`;
-            });
-            window.addEventListener('resize', () => {
-                parallaxActive = window.innerWidth >= 768;
-                const heroTitle = heroSection?.querySelector('h2');
-                if (heroTitle && !parallaxActive) heroTitle.style.transform = '';
-            });
-        })();
-    </script>
+/* ════════════════ РЕНДЕР ════════════════ */
+const $=s=>document.querySelector(s);
+let L="ru";
+const tx=v=>v==null?"":(typeof v==="string"?v:(v[L]??v.ru));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function media(p){
+  const hasVideo=p.video&&p.video.src;
+  if(hasVideo||p.soon&&p.images){
+    const poster=hasVideo?p.video.poster:`assets/img/${p.images[0]}.webp`;
+    const player=hasVideo
+      ?`<div class="player"><video controls preload="none" playsinline poster="${poster}"><source src="${p.video.src}" type="video/mp4"></video></div>`
+      :`<div class="player"><img src="${poster}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover"><span class="soon">${T[L]["video.soon"]}</span></div>`;
+    const rest=p.images?(hasVideo?p.images:p.images.slice(1)):[];
+    const thumbs=rest.length
+      ?`<div class="thumbs" style="--n:${Math.max(3,rest.length)}">${rest.map((im,i)=>`<button data-gal="${p.id}" data-i="${hasVideo?i:i+1}" aria-label="${T[L].open}"><img src="assets/img/${im}-s.webp" alt="" loading="lazy"></button>`).join("")}</div>`:"";
+    return `<div class="media">${player}</div>${thumbs}`;
+  }
+  if(p.images&&p.images.length){
+    return `<div class="media"><div class="gal">${p.images.map((im,i)=>`<button class="${i?"sm":"big"}" data-gal="${p.id}" data-i="${i}" aria-label="${T[L].open}">
+      <img src="assets/img/${im}${i?"-s":""}.webp" alt="" loading="lazy"></button>`).join("")}</div></div>`;
+  }
+  return "";
+}
+const mmss=s=>Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0");
+function clips(p){
+  if(!p.clips||!p.clips.length)return "";
+  const base=p.clipBase||"assets/video/clips/";
+  return `<div class="clips-h">${T[L].clips}</div><div class="clips">${p.clips.map(c=>{const cc=c[L]||c.ru;return `
+    <div class="clip"><div class="v" data-clip><video muted loop playsinline preload="none" poster="${base}${c.id}.webp"><source src="${base}${c.id}.mp4" type="video/mp4"></video></div>
+      <div class="t"><b>${esc(cc.t)}</b><p>${esc(cc.d||"")}</p>
+      ${p.video&&c.at!=null?`<button class="seek" data-seek="${c.at}" data-proj="${p.id}">▶ ${T[L].seek} ${mmss(c.at)}</button>`:""}</div></div>`;}).join("")}</div>`;
+}
+function renderProjects(){
+  $("#projlist").innerHTML=PROJECTS.map(p=>{
+    const tags=`<div class="tags">${(p.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>`;
+    const text=`<div><p class="p-desc">${tx(p.desc)}</p>${tags}</div>`;
+    const pts=p.points?`<ul class="points">${tx(p.points).map(x=>`<li>${x}</li>`).join("")}</ul>`:"";
+    const m=media(p);
+    const body=m
+      ?`<div class="p-body"${pts?"":` style="grid-template-columns:1fr"`}>${text}${pts}</div>`
+      :`<div class="textcard"><div class="p-body" style="grid-template-columns:1fr;margin-top:0">${text}${pts}</div></div>`;
+    return `<article class="proj reveal" id="${p.id}">
+      <div class="p-head"><div><div class="p-kick">${tx(p.kick)}</div><h3 class="p-title">${esc(tx(p.title))}</h3></div>
+        <span class="status${p.live?" live":""}">${tx(p.status)}</span></div>
+      ${m}${body}${clips(p)}
+    </article>`;}).join("");
+  observeReveal(); observeClips();
+}
+function render(){
+  document.documentElement.lang=L;
+  document.title=(L==="ru"?"Никита Сергиенко":"Nikita Sergienko")+" · Unreal Engine 5 Developer";
+  document.querySelectorAll("[data-i]").forEach(el=>{const v=T[L][el.dataset.i];if(v!=null)el.textContent=v;});
+  document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===L)));
+  $("#tiles").innerHTML=TILES.map(t=>`<div class="tile"><b>${tx(t.b)}</b><span>${tx(t.s)}</span></div>`).join("");
+  $("#exppoints").innerHTML=EXP[L].map(x=>`<li>${x}</li>`).join("");
+  $("#skills-grid").innerHTML=SKILLS.map(s=>`<div class="sk"><h4>${tx(s.h)}</h4><p>${tx(s.p)}</p></div>`).join("");
+  $("#edu").innerHTML=EDU.map(s=>`<div class="sk"><h4>${tx(s.h)}</h4><b>${tx(s.b)}</b><p>${tx(s.p)}</p></div>`).join("");
+  renderProjects();
+}
+
+/* язык: сохраняем выбор, по умолчанию берём язык браузера */
+function setLang(l){L=l;try{localStorage.setItem("lang",l);}catch(e){}render();}
+document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
+try{const s=localStorage.getItem("lang");L=s||((navigator.language||"ru").toLowerCase().startsWith("ru")?"ru":"en");}catch(e){}
+
+/* появление при прокрутке */
+let ro;
+function observeReveal(){
+  if(!("IntersectionObserver" in window)){document.querySelectorAll(".reveal").forEach(e=>e.classList.add("in"));return;}
+  ro=ro||new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");ro.unobserve(e.target);}}),{rootMargin:"0px 0px -8% 0px"});
+  document.querySelectorAll(".reveal:not(.in)").forEach(e=>ro.observe(e));
+}
+/* клипы: играют сами, когда видны */
+let co;
+function observeClips(){
+  const vids=document.querySelectorAll(".clip video"); if(!vids.length)return;
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  co=co||new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;
+    if(e.isIntersecting&&!reduce){v.preload="auto";v.play().catch(()=>{});}else v.pause();}),{threshold:.6});
+  vids.forEach(v=>co.observe(v));
+  document.querySelectorAll("[data-clip]").forEach(w=>w.onclick=()=>{const v=w.querySelector("video");v.paused?v.play():v.pause();});
+}
+
+/* клип → перемотка основного видео на этот момент */
+document.addEventListener("click",e=>{const b=e.target.closest("[data-seek]");if(!b)return;
+  const v=document.querySelector("#"+b.dataset.proj+" .player video");if(!v)return;
+  const t=+b.dataset.seek, go=()=>{try{v.currentTime=t;}catch(err){} v.play().catch(()=>{});};
+  v.scrollIntoView({behavior:"smooth",block:"center"});
+  if(v.readyState>=1)go();else{v.preload="auto";v.addEventListener("loadedmetadata",go,{once:true});v.load();}
+});
+
+/* лайтбокс */
+const lb=$("#lb"),lbImg=lb.querySelector("img"),lbCap=lb.querySelector(".cap");
+let gal=null,gi=0,lastFocus=null;
+function openLB(id,i){const p=PROJECTS.find(x=>x.id===id);if(!p||!p.images)return;gal=p;gi=i;lastFocus=document.activeElement;showLB();lb.classList.add("on");lb.querySelector(".x").focus();document.body.style.overflow="hidden";}
+function showLB(){lbImg.src=`assets/img/${gal.images[gi]}.webp`;lbCap.textContent=`${tx(gal.title)} · ${gi+1} / ${gal.images.length}`;}
+function closeLB(){lb.classList.remove("on");document.body.style.overflow="";if(lastFocus)lastFocus.focus();}
+function step(d){gi=(gi+d+gal.images.length)%gal.images.length;showLB();}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-gal]");if(b)openLB(b.dataset.gal,+b.dataset.i);});
+lb.querySelector(".x").onclick=closeLB; lb.querySelector(".pv").onclick=()=>step(-1); lb.querySelector(".nx").onclick=()=>step(1);
+lb.addEventListener("click",e=>{if(e.target===lb)closeLB();});
+document.addEventListener("keydown",e=>{if(!lb.classList.contains("on"))return;
+  if(e.key==="Escape")closeLB();else if(e.key==="ArrowLeft")step(-1);else if(e.key==="ArrowRight")step(1);});
+
+render();
+</script>
 </body>
 </html>
